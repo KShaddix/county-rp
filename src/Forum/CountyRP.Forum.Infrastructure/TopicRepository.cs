@@ -30,9 +30,7 @@ namespace CountyRP.Forum.Infrastructure
 
             await _topicContext.SaveChangesAsync();
 
-            var createdTopic = _topicContext.Topics.FirstOrDefault(t => t.Id == topic.Id);
-
-            return createdTopic;
+            return topic;
         }
 
         public Task<Topic> Edit(int topicId)

@@ -20,19 +20,6 @@ namespace CountyRP.Forum.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Получение всех тем на форуме id
-        /// </summary>
-        [HttpGet("Forum/{id}")]
-        [ProducesResponseType(typeof(Topic), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var res = await _topicRepository.GetByForumId(id);
-
-            return Ok(res);
-        }
-
-        /// <summary>
         /// Создание темы на форуме
         /// </summary>
         [HttpPost(nameof(CreateTopic))]

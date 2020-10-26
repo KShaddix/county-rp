@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Linq;
 
 using CountyRP.Forum.Domain;
@@ -14,16 +15,22 @@ namespace CountyRP.Forum.Infrastructure
             _forumContext = forumContext;
         }
 
+        public async Task<IEnumerable<ForumModel>> GetAll()
+        {
+            var forums = _forumContext.Forums.Select(f => f).ToList();
+
+            return forums;
+        }
+
         public async Task<ForumModel> CreateForum(ForumModel forum)
         { 
             _forumContext.Forums.Add(forum);
 
             await _forumContext.SaveChangesAsync();
 
-            var createdForum = _forumContext.Forums.FirstOrDefault(f => f.Id == forum.Id);
-
-            return createdForum;
+            return forum;
             
         }
+
     }
 }
