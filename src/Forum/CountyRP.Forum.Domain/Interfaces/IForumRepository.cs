@@ -4,6 +4,6 @@ namespace CountyRP.Forum.Domain.Interfaces
 {
     public interface IForumRepository
     {
-        Task CreateForum(ForumModel forum);
+        Task<ForumModel> CreateForum(ForumModel forum);
     }
 }

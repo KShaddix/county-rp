@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
-using CountyRP.Forum.Domain.Interfaces;
 using CountyRP.Forum.Domain;
+using CountyRP.Forum.Domain.Interfaces;
+using CountyRP.Forum.Domain.Exceptions;
 
 namespace CountyRP.Forum.WebAPI.Controllers
 {
@@ -26,9 +27,16 @@ namespace CountyRP.Forum.WebAPI.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateForum([FromBody] ForumModel forum)
         {
-            await _forumRepository.CreateForum(forum);
+            try
+            {
+                var createdForum = await _forumRepository.CreateForum(forum);
 
-            return Ok();
+                return Ok(createdForum);
+            }
+            catch (Extra.ApiException ex)
+            {
+                throw new ForumException(ex.StatusCode, ex.Message);
+            }
         }
     }
 }
