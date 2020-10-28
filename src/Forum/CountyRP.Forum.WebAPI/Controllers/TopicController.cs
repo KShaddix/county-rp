@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
 using CountyRP.Forum.Domain.Interfaces;
-using CountyRP.Forum.Domain.Exceptions;
 using CountyRP.Forum.Domain.Models;
 using CountyRP.Forum.WebAPI.ViewModels;
 
@@ -34,9 +34,9 @@ namespace CountyRP.Forum.WebAPI.Controllers
 
                 return Ok(createdTopic);
             }
-            catch (Extra.ApiException ex)
+            catch (Exception ex)
             {
-                throw new ForumException(ex.StatusCode, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -57,9 +57,9 @@ namespace CountyRP.Forum.WebAPI.Controllers
 
                 return Ok(editedTopic);
             }
-            catch (Extra.ApiException ex)
+            catch (Exception ex)
             {
-                throw new ForumException(ex.StatusCode, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -74,9 +74,9 @@ namespace CountyRP.Forum.WebAPI.Controllers
 
                 return Ok();
             }
-            catch (Extra.ApiException ex)
+            catch (Exception ex)
             {
-                throw new ForumException(ex.StatusCode, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }

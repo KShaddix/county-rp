@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace CountyRP.Forum.Domain.Models
+using CountyRP.Forum.Domain.Models;
+
+namespace CountyRP.Forum.Infrastructure.Models
 {
     public class PostContext : DbContext
     {

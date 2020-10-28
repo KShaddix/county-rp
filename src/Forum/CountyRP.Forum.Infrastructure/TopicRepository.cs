@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using CountyRP.Forum.Domain.Interfaces;
 using CountyRP.Forum.Domain.Models;
-using CountyRP.Forum.Domain.Models.ViewModels;
+using CountyRP.Forum.Infrastructure.Models;
 
 namespace CountyRP.Forum.Infrastructure
 {
@@ -47,7 +47,7 @@ namespace CountyRP.Forum.Infrastructure
         {
             var topic = _topicContext.Topics.FirstOrDefault(t => t.Id == id);
 
-            _topicContext.Entry(topic).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            _topicContext.Topics.Remove(topic);
 
             await _topicContext.SaveChangesAsync();
         }

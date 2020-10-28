@@ -4,6 +4,7 @@ using System.Linq;
 
 using CountyRP.Forum.Domain.Interfaces;
 using CountyRP.Forum.Domain.Models;
+using CountyRP.Forum.Infrastructure.Models;
 
 namespace CountyRP.Forum.Infrastructure
 {
