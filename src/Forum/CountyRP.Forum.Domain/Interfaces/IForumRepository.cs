@@ -1,6 +1,7 @@
-﻿using CountyRP.Forum.Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
+﻿using CountyRP.Forum.Domain.Models;
 
 namespace CountyRP.Forum.Domain.Interfaces
 {
