@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using CountyRP.Forum.Domain.Models;
+using CountyRP.Forum.Domain.Models.ViewModels;
+
 namespace CountyRP.Forum.Domain.Interfaces
 {
     public interface ITopicRepository
     {
-        // получение всех топиков
         Task<IEnumerable<Topic>> GetByForumId(int forumId);
-        // создание топика
         Task<Topic> CreateTopic(Topic topic);
-        // редактирование топика
-        Task<Topic> Edit(int topicId);
+        Task<Topic> Edit(TopicViewModel topicViewModel);
+        Task Delete(int id);
     }
 }

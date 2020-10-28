@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CountyRP.Forum.Domain.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CountyRP.Forum.Domain.Interfaces

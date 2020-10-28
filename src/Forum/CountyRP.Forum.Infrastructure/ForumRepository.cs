@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using CountyRP.Forum.Domain;
 using CountyRP.Forum.Domain.Interfaces;
+using CountyRP.Forum.Domain.Models;
 
 namespace CountyRP.Forum.Infrastructure
 {

@@ -2,11 +2,11 @@
 
 namespace CountyRP.Forum.Domain.Models
 {
-    public class TopicContext : DbContext
+    public class PostContext : DbContext
     {
-        public DbSet<Topic> Topics { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
-        public TopicContext(DbContextOptions<TopicContext> options)
+        public PostContext(DbContextOptions<PostContext> options)
             : base(options)
         {
             Database.EnsureCreated();

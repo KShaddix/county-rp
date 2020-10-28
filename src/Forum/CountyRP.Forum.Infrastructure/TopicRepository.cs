@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using CountyRP.Forum.Domain;
 using CountyRP.Forum.Domain.Interfaces;
+using CountyRP.Forum.Domain.Models;
+using CountyRP.Forum.Domain.Models.ViewModels;
 
 namespace CountyRP.Forum.Infrastructure
 {
@@ -33,10 +33,23 @@ namespace CountyRP.Forum.Infrastructure
             return topic;
         }
 
-        public Task<Topic> Edit(int topicId)
+        public async Task<Topic> Edit(TopicViewModel topicViewModel)
         {
-            throw new NotImplementedException();
+            var topic = _topicContext.Topics.FirstOrDefault(t => t.Id == topicViewModel.Id);
+            topic.Caption = topicViewModel.Caption;
+
+            await _topicContext.SaveChangesAsync();
+
+            return topic;
         }
 
+        public async Task Delete(int id)
+        {
+            var topic = _topicContext.Topics.FirstOrDefault(t => t.Id == id);
+
+            _topicContext.Entry(topic).State = Microsoft.EntityFrameworkCore.EntityState.Deleted;
+
+            await _topicContext.SaveChangesAsync();
+        }
     }
 }
