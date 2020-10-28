@@ -33,14 +33,14 @@ namespace CountyRP.Forum.Infrastructure
             return topic;
         }
 
-        public async Task<Topic> Edit(TopicViewModel topicViewModel)
+        public async Task<Topic> Edit(Topic topic)
         {
-            var topic = _topicContext.Topics.FirstOrDefault(t => t.Id == topicViewModel.Id);
-            topic.Caption = topicViewModel.Caption;
+            var existingTopic = _topicContext.Topics.FirstOrDefault(t => t.Id == topic.Id);
+            existingTopic.Caption = topic.Caption;
 
             await _topicContext.SaveChangesAsync();
 
-            return topic;
+            return existingTopic;
         }
 
         public async Task Delete(int id)

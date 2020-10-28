@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CountyRP.Forum.Domain.Exceptions;
 using CountyRP.Forum.Domain.Interfaces;
 using CountyRP.Forum.Domain.Models;
-using CountyRP.Forum.Domain.Models.ViewModels;
+using CountyRP.Forum.WebAPI.ViewModels;
 
 namespace CountyRP.Forum.WebAPI.Controllers
 {
@@ -61,10 +61,16 @@ namespace CountyRP.Forum.WebAPI.Controllers
         [HttpPut(nameof(EditPost))]
         [ProducesResponseType(typeof(Post), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> EditPost([FromBody] PostViewModel post)
+        public async Task<IActionResult> EditPost([FromBody] PostViewModel postViewModel)
         {
             try
             {
+                var post = new Post
+                {
+                    Id = postViewModel.Id,
+                    Text = postViewModel.Text
+                };
+
                 var editedPost = await _postRepository.Edit(post);
 
                 return Ok(editedPost);

@@ -1,4 +1,4 @@
-﻿namespace CountyRP.Forum.Domain.Models.ViewModels
+﻿namespace CountyRP.Forum.WebAPI.ViewModels
 {
     public class PostViewModel
     {
