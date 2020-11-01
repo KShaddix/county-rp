@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-﻿using CountyRP.Forum.Domain.Models;
+using CountyRP.Forum.Domain.Models;
 
 namespace CountyRP.Forum.Domain.Interfaces
 {
@@ -9,5 +9,6 @@ namespace CountyRP.Forum.Domain.Interfaces
     {
         Task<IEnumerable<ForumModel>> GetAll();
         Task<ForumModel> CreateForum(ForumModel forum);
+        Task<(Topic, Post, int)> GetForumInfo(ForumModel forum);
     }
 }
