@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
-using CountyRP.Forum.Domain.Interfaces;
 using CountyRP.Forum.Domain.Models;
 using CountyRP.Forum.WebAPI.ViewModels;
 using CountyRP.Forum.WebAPI.Services.Interfaces;
@@ -15,16 +14,10 @@ namespace CountyRP.Forum.WebAPI.Controllers
     public class ForumController : ControllerBase
     {
         private readonly IForumService _forumService;
-        private readonly IForumRepository _forumRepository;
-        private readonly ITopicRepository _topicRepository;
 
-        public ForumController(IForumRepository forumRepository,
-            ITopicRepository topicRepository,
-            IForumService forumService)
+        public ForumController(IForumService forumService)
         {
             _forumService = forumService;
-            _forumRepository = forumRepository;
-            _topicRepository = topicRepository;
         }
 
         /// <summary>
@@ -37,7 +30,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         {
             try
             {
-                var forums = await _forumRepository.GetAll();
+                var forums = await _forumService.GetAllForums();
 
                 return Ok(forums);
             }
@@ -57,7 +50,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         {
             try
             {
-                var topics = await _topicRepository.GetByForumId(id);
+                var topics = await _forumService.GetTopicsByForumId(id);
 
                 return Ok(topics);
             }
@@ -77,7 +70,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         {
             try
             {
-                var createdForum = await _forumRepository.CreateForum(forum);
+                var createdForum = await _forumService.CreateForum(forum);
 
                 return Ok(createdForum);
             }
