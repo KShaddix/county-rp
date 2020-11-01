@@ -47,7 +47,7 @@ namespace CountyRP.Forum.Infrastructure
 
             var allPosts = new List<Post>();
 
-            var topics = await _topicRepository.GetByForumId(forum.Id);
+            var topics = (await _topicRepository.GetByForumId(forum.Id)).ToArray();
             foreach (var topic in topics)
             {
                 allPosts.AddRange(_postRepository.GetPosts(topic.Id)?.Result);
