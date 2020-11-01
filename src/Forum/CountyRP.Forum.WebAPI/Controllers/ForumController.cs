@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
 using CountyRP.Forum.Domain.Interfaces;
 using CountyRP.Forum.Domain.Models;
 using CountyRP.Forum.WebAPI.ViewModels;
-
+using CountyRP.Forum.WebAPI.Services.Interfaces;
 
 namespace CountyRP.Forum.WebAPI.Controllers
 {
@@ -15,17 +14,17 @@ namespace CountyRP.Forum.WebAPI.Controllers
     [Route("[controller]")]
     public class ForumController : ControllerBase
     {
+        private readonly IForumService _forumService;
         private readonly IForumRepository _forumRepository;
         private readonly ITopicRepository _topicRepository;
-        private Extra.PlayerClient _playerClient;
 
         public ForumController(IForumRepository forumRepository,
             ITopicRepository topicRepository,
-            Extra.PlayerClient playerClient)
+            IForumService forumService)
         {
+            _forumService = forumService;
             _forumRepository = forumRepository;
             _topicRepository = topicRepository;
-            _playerClient = playerClient;
         }
 
         /// <summary>
@@ -95,33 +94,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         {
             try
             {
-                var forumInfos = new List<ForumInfoViewModel>();
-                var forums = await _forumRepository.GetAll();
-
-                foreach (var forum in forums)
-                {
-                    var (lastTopic, lastPost, postsCount) = await _forumRepository.GetForumInfo(forum);
-
-                    var player = await _playerClient.GetByIdAsync(lastPost.UserId);
-
-                    forumInfos.Add(new ForumInfoViewModel
-                    {
-                        Id = forum.Id,
-                        Name = forum.Name,
-                        LastTopic = new TopicViewModel_v2
-                        {
-                            Id = lastTopic.Id,
-                            Name = lastTopic.Caption,
-                            Player = new PlayerViewModel
-                            {
-                                Id = player.Id,
-                                Login = player.Login
-                            }
-                        },
-                        PostsCount = postsCount,
-                        DateTime = lastPost.CreationDateTime
-                    });
-                }
+                var forumInfos = await _forumService.GetForumsInfo();
 
                 return Ok(forumInfos);
             }

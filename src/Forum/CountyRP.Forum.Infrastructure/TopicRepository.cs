@@ -17,7 +17,7 @@ namespace CountyRP.Forum.Infrastructure
             _topicContext = topicContext;
         }
 
-        public async Task<List<Topic>> GetByForumId(int id)
+        public async Task<IEnumerable<Topic>> GetByForumId(int id)
         {
             var topics = _topicContext.Topics.Where(t => t.ForumId == id).ToList();
 
