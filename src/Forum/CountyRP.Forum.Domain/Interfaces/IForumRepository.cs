@@ -9,6 +9,5 @@ namespace CountyRP.Forum.Domain.Interfaces
     {
         Task<IEnumerable<ForumModel>> GetAll();
         Task<ForumModel> CreateForum(ForumModel forum);
-        Task<(Topic, Post, int)> GetForumInfo(ForumModel forum);
     }
 }

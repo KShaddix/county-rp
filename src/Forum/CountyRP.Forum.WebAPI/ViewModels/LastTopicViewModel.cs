@@ -1,6 +1,6 @@
 ﻿namespace CountyRP.Forum.WebAPI.ViewModels
 {
-    public class TopicViewModel_v2
+    public class LastTopicViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

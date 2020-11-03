@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using CountyRP.Forum.Domain.Interfaces;
@@ -12,14 +13,17 @@ namespace CountyRP.Forum.WebAPI.Services
     {
         private readonly IForumRepository _forumRepository;
         private readonly ITopicRepository _topicRepository;
+        private readonly IPostRepository _postRepository;
         private Extra.PlayerClient _playerClient;
 
         public ForumService(IForumRepository forumRepository,
             ITopicRepository topicRepository,
+            IPostRepository postRepository,
             Extra.PlayerClient playerClient)
         {
             _forumRepository = forumRepository;
             _topicRepository = topicRepository;
+            _postRepository = postRepository;
             _playerClient = playerClient;
         }
 
@@ -46,12 +50,25 @@ namespace CountyRP.Forum.WebAPI.Services
 
         public async Task<IEnumerable<ForumInfoViewModel>> GetForumsInfo()
         {
+            Topic lastTopic = new Topic();
+            Post lastPost = new Post();
             var forumInfos = new List<ForumInfoViewModel>();
+            var allPosts = new List<Post>();
+
             var forums = await _forumRepository.GetAll();
 
             foreach (var forum in forums)
             {
-                var (lastTopic, lastPost, postsCount) = await _forumRepository.GetForumInfo(forum);
+                var topics = (await _topicRepository.GetByForumId(forum.Id)).ToArray();
+                
+                foreach (var topic in topics)
+                {
+                    allPosts.AddRange(_postRepository.GetPosts(topic.Id)?.Result);
+                }
+
+                lastPost = allPosts?.OrderByDescending(p => p.CreationDateTime).FirstOrDefault();
+                lastTopic = topics?.Where(t => t.Id == lastPost.TopicId)?.FirstOrDefault();
+                int postsCount = allPosts.Count();
 
                 var player = await _playerClient.GetByIdAsync(lastPost.UserId);
 
@@ -59,7 +76,7 @@ namespace CountyRP.Forum.WebAPI.Services
                 {
                     Id = forum.Id,
                     Name = forum.Name,
-                    LastTopic = new TopicViewModel_v2
+                    LastTopic = new LastTopicViewModel
                     {
                         Id = lastTopic.Id,
                         Name = lastTopic.Caption,
