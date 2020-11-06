@@ -9,7 +9,6 @@ namespace CountyRP.Forum.WebAPI.Services.Interfaces
     public interface IForumService
     {
         Task<IEnumerable<ForumModel>> GetAllForums();
-        Task<IEnumerable<Topic>> GetTopicsByForumId(int id);
         Task<ForumModel> CreateForum(ForumModel forum);
         Task<IEnumerable<ForumInfoViewModel>> GetForumsInfo();
     }

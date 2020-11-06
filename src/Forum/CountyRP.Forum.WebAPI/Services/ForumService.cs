@@ -41,13 +41,6 @@ namespace CountyRP.Forum.WebAPI.Services
             return forums;
         }
 
-        public async Task<IEnumerable<Topic>> GetTopicsByForumId(int id)
-        {
-            var topics = await _topicRepository.GetByForumId(id);
-
-            return topics;
-        }
-
         public async Task<IEnumerable<ForumInfoViewModel>> GetForumsInfo()
         {
             Topic lastTopic = new Topic();
@@ -63,11 +56,11 @@ namespace CountyRP.Forum.WebAPI.Services
                 
                 foreach (var topic in topics)
                 {
-                    allPosts.AddRange(_postRepository.GetPosts(topic.Id)?.Result);
+                    allPosts.AddRange(await _postRepository.GetPosts(topic.Id));
                 }
 
                 lastPost = allPosts?.OrderByDescending(p => p.CreationDateTime).FirstOrDefault();
-                lastTopic = topics?.Where(t => t.Id == lastPost.TopicId)?.FirstOrDefault();
+                lastTopic = topics?.FirstOrDefault(t => t.Id == lastPost.TopicId);
                 int postsCount = allPosts.Count();
 
                 var player = await _playerClient.GetByIdAsync(lastPost.UserId);

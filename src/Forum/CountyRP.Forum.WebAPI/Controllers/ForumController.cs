@@ -41,26 +41,6 @@ namespace CountyRP.Forum.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Получение всех тем на форуме id
-        /// </summary>
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Topic), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetById(int id)
-        {
-            try
-            {
-                var topics = await _forumService.GetTopicsByForumId(id);
-
-                return Ok(topics);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        /// <summary>
         /// Создание форума
         /// </summary>
         [HttpPost(nameof(CreateForum))]
