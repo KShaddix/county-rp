@@ -10,7 +10,7 @@ using CountyRP.Forum.WebAPI.Services.Interfaces;
 namespace CountyRP.Forum.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("Forum/api")]
     public class ForumController : ControllerBase
     {
         private readonly IForumService _forumService;
@@ -23,7 +23,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         /// <summary>
         /// Получение всех форумов
         /// </summary>
-        [HttpGet(nameof(GetAll))]
+        [HttpGet("Forum")]
         [ProducesResponseType(typeof(ForumModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll()
@@ -41,16 +41,56 @@ namespace CountyRP.Forum.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Создание форума
+        /// Получить форум с ID id
         /// </summary>
-        [HttpPost(nameof(CreateForum))]
-        [ProducesResponseType(typeof(ForumModel), StatusCodes.Status201Created)]
+        [HttpGet("Forum/{id}")]
+        [ProducesResponseType(typeof(ForumModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateForum([FromBody] ForumModel forum)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                var createdForum = await _forumService.CreateForum(forum);
+                var forum = await _forumService.GetForumById(id);
+
+                return Ok(forum);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Изменить форум
+        /// </summary>
+        [HttpPut("Forum/{id}")]
+        [ProducesResponseType(typeof(ForumModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Edit(int id, [FromBody] ForumViewModel forumViewModel)
+        {
+            try
+            {
+                var editedForum = await _forumService.Edit(id, forumViewModel);
+
+                return Ok(editedForum);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Создать форум
+        /// </summary>
+        [HttpPost("Forum")]
+        [ProducesResponseType(typeof(ForumModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Create([FromBody] ForumViewModel forumViewModel)
+        {
+            try
+            {
+                var createdForum = await _forumService.CreateForum(forumViewModel);
 
                 return Ok(createdForum);
             }
@@ -60,16 +100,39 @@ namespace CountyRP.Forum.WebAPI.Controllers
             }
         }
 
-        [HttpGet(nameof(GetForumsInfo))]
-        [ProducesResponseType(typeof(ForumInfoViewModel), StatusCodes.Status200OK)]
+        /// <summary>
+        /// Удалить форум
+        /// </summary>
+        [HttpDelete("Forum/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetForumsInfo()
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var forumInfos = await _forumService.GetForumsInfo();
+                await _forumService.Delete(id);
 
-                return Ok(forumInfos);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Получить все форумы с информацией о темах и т.д.
+        /// </summary>
+        [HttpGet("Forum/Full")]
+        [ProducesResponseType(typeof(ForumInfoViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetFullAll()
+        {
+            try
+            {
+                var forumFull = await _forumService.GetForumsInfo();
+
+                return Ok(forumFull);
             }
             catch (Exception ex)
             {
