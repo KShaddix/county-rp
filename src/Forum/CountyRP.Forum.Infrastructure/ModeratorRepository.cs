@@ -19,7 +19,7 @@ namespace CountyRP.Forum.Infrastructure
 
         public async Task<IEnumerable<Moderator>> GetAll()
         {
-            return _moderatorContext.Moderators.Select(m => m).ToList();
+            return _moderatorContext.Moderators.ToArray();
         }
 
         public async Task<Moderator> GetById(int id)

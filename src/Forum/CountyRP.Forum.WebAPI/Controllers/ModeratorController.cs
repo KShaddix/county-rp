@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 using CountyRP.Forum.WebAPI.Services.Interfaces;
 using CountyRP.Forum.Domain.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace CountyRP.Forum.WebAPI.Controllers
 {
     [ApiController]
-    [Route("Forum/api")]
+    [Route("Forum/api/[controller]")]
     public class ModeratorController : ControllerBase
     {
         private readonly IModeratorService _moderatorService;
@@ -22,7 +22,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         /// <summary>
         /// Получить список всех модераторов
         /// </summary>
-        [HttpGet("Moderator")]
+        [HttpGet]
         [ProducesResponseType(typeof(Moderator), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll()
@@ -40,7 +40,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         /// <summary>
         /// Получить модератора с ID id
         /// </summary>
-        [HttpGet("Moderator/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(Moderator), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetById(int id)

@@ -10,7 +10,7 @@ using CountyRP.Forum.WebAPI.Services.Interfaces;
 namespace CountyRP.Forum.WebAPI.Controllers
 {
     [ApiController]
-    [Route("Forum/api")]
+    [Route("Forum/api/[controller]")]
     public class ForumController : ControllerBase
     {
         private readonly IForumService _forumService;
@@ -23,7 +23,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         /// <summary>
         /// Получение всех форумов
         /// </summary>
-        [HttpGet("Forum")]
+        [HttpGet]
         [ProducesResponseType(typeof(ForumModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll()
@@ -43,7 +43,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         /// <summary>
         /// Получить форум с ID id
         /// </summary>
-        [HttpGet("Forum/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(ForumModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(int id)
@@ -63,7 +63,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         /// <summary>
         /// Изменить форум
         /// </summary>
-        [HttpPut("Forum/{id}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(typeof(ForumModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Edit(int id, [FromBody] ForumViewModel forumViewModel)
@@ -83,7 +83,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         /// <summary>
         /// Создать форум
         /// </summary>
-        [HttpPost("Forum")]
+        [HttpPost]
         [ProducesResponseType(typeof(ForumModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] ForumViewModel forumViewModel)
@@ -103,7 +103,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         /// <summary>
         /// Удалить форум
         /// </summary>
-        [HttpDelete("Forum/{id}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(int id)
@@ -123,7 +123,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         /// <summary>
         /// Получить все форумы с информацией о темах и т.д.
         /// </summary>
-        [HttpGet("Forum/Full")]
+        [HttpGet("Full")]
         [ProducesResponseType(typeof(ForumInfoViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetFullAll()

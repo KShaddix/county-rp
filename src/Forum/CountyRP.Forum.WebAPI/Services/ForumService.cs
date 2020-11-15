@@ -113,7 +113,8 @@ namespace CountyRP.Forum.WebAPI.Services
 
             foreach (var moder in moders)
             {
-                moderators.Add(await CreateModeratorModel(moder));
+                if(moder.EntityType.Equals(1))
+                    moderators.Add(await CreateModeratorModel(moder));
             }
 
             return new ForumInfoViewModel
