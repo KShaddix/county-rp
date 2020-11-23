@@ -39,10 +39,7 @@ namespace CountyRP.Forum.WebAPI.Services
 
             foreach (var topic in allTopics)
             {
-                var lastPost = (await _postRepository.GetPosts(topic.Id))
-                    .OrderByDescending(p => p.CreationDateTime)
-                    .FirstOrDefault();
-
+                var lastPost = await _postRepository.GetLastPostInTopic(topic.Id);
                 var player = await _playerClient.GetByIdAsync(lastPost.UserId);
 
                 topicsForFilter.Add(

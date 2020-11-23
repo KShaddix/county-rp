@@ -44,7 +44,7 @@ namespace CountyRP.Forum.WebAPI.Controllers
         [HttpGet("{forumId}/{page}")]
         [ProducesResponseType(typeof(TopicFilterViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> FilterByPage(int forumId, int page)
+        public async Task<IActionResult> FilterBy(int forumId, int page)
         {
             try
             {
