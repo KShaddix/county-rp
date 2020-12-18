@@ -38,10 +38,11 @@ namespace CountyRP.Forum.WebAPI
             services.AddTransient<IForumRepository, ForumRepository>();
             services.AddTransient<ITopicRepository, TopicRepository>();
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IModeratorRepository, ModeratorRepository>();
             services.AddTransient<IForumService, ForumService>();
             services.AddTransient<ITopicService, TopicService>();
-            services.AddTransient<IModeratorRepository, ModeratorRepository>();
             services.AddTransient<IModeratorService, ModeratorService>();
+            services.AddTransient<IPostService, PostService>();
 
             HttpClient httpClient = new HttpClient();
             services.AddSingleton(new PlayerClient(httpClient));
