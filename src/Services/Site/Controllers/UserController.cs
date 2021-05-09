@@ -1,10 +1,13 @@
-﻿using CountyRP.Services.Site.Models;
+﻿using CountyRP.Services.Site.Converters;
+using CountyRP.Services.Site.Models;
 using CountyRP.Services.Site.Repositories;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
-using CountyRP.Services.Site.Converters;
+using CountyRP.Services.Site.Models.Api;
+using CountyRP.Services.Site;
+using System.Text.RegularExpressions;
 
 namespace Site.Controllers
 {
@@ -24,16 +27,50 @@ namespace Site.Controllers
             _siteRepository = siteRepository;
         }
 
+        /// <summary>
+        /// Создать пользователя.
+        /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(UserDtoOut), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(UserDtoIn userDtoIn)
         {
+            if (userDtoIn.Login == null || userDtoIn.Login.Length < 3 || userDtoIn.Login.Length > 32)
+            {
+                return BadRequest(ConstantMessages.UserInvalidLoginLength);
+            }
+            if (!Regex.IsMatch(userDtoIn.Login, @"^([0-9a-zA-Z]{3,32}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31})$"))
+            {
+                return BadRequest(ConstantMessages.UserInvalidLogin);
+            }
+            if (userDtoIn.Password == null || userDtoIn.Password.Length < 8 || userDtoIn.Password.Length > 64)
+            {
+                return BadRequest(ConstantMessages.UserInvalidPasswordLength);
+            }
+            if (!Regex.IsMatch(userDtoIn.Password, @"^[0-9a-zA-Z!@#№$%^&?*()\-=\[\]{}~`]{8,64}$"))
+            {
+                return BadRequest(ConstantMessages.UserInvalidPassword);
+            }
+
+            var existedUser = await _siteRepository.GetUserByLoginAsync(userDtoIn.Login);
+
+            if (existedUser != null)
+            {
+                return BadRequest(ConstantMessages.UserAlreadyExistedWithLogin);
+            }
+
             var userDtoOut = await _siteRepository.AddUserAsync(userDtoIn);
 
-            return Created(string.Empty, userDtoOut);
+            return Created(
+                string.Empty,
+                UserDtoOutConverter.ToApi(userDtoOut)
+            );
         }
 
-        [HttpGet("GetById/{id}")]
+        /// <summary>
+        /// Получить данные пользователя по ID.
+        /// </summary>
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(UserDtoOut), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
@@ -42,33 +79,126 @@ namespace Site.Controllers
 
             if (userDtoOut == null)
             {
-                return NotFound($"Пользователь с ID {id} не найден");
+                return NotFound(
+                    string.Format(ConstantMessages.UserNotFoundById, id)
+                );
             }
 
-            return Ok(userDtoOut);
+            return Ok(
+                UserDtoOutConverter.ToApi(userDtoOut)
+            );
         }
 
-        [HttpGet("GetByLogin/{login}")]
+        /// <summary>
+        /// Получить данные пользователя по логину.
+        /// </summary>
+        [HttpGet("ByLogin/{login}")]
+        [ProducesResponseType(typeof(UserDtoOut), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByLogin(string login)
         {
             var userDtoOut = await _siteRepository.GetUserByLoginAsync(login);
 
             if (userDtoOut == null)
             {
-                return NotFound();
+                return NotFound(
+                    string.Format(ConstantMessages.UserNotFoundByLogin, login)
+                );
             }
 
-            return Ok(userDtoOut);
+            return Ok(
+                UserDtoOutConverter.ToApi(userDtoOut)
+            );
         }
 
+        /// <summary>
+        /// Аутентифицировать пользователя.
+        /// </summary>
+        [HttpPost("Authenticate")]
+        [ProducesResponseType(typeof(UserDtoOut), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Authenticate(string login, string password)
+        {
+            var userDtoOut = await _siteRepository.Authenticate(login, password);
+
+            if (userDtoOut == null)
+            {
+                return NotFound(
+                    ConstantMessages.UserInvalidAuthentication
+                );
+            }
+
+            return Ok(
+                UserDtoOutConverter.ToApi(userDtoOut)
+            );
+        }
+
+        /// <summary>
+        /// Получить отфильтрованный список пользователей.
+        /// </summary>
+        [HttpGet("FilterBy")]
+        [ProducesResponseType(typeof(PagedFilterResult<UserDtoOut>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> FilterBy([FromQuery] ApiUserFilterDtoIn filter)
+        {
+            if (filter.Count < 1 || filter.Count > 100)
+            {
+                return BadRequest(ConstantMessages.InvalidCountItemPerPage);
+            }
+
+            if (filter.Page < 1)
+            {
+                return BadRequest(ConstantMessages.InvalidPageNumber);
+            }
+
+            var filterDtoIn = ApiUserFilterDtoInConverter.ToRepository(filter);
+
+            var filteredUsers = await _siteRepository.GetUsersByFilterAsync(filterDtoIn);
+
+            return Ok(
+                PagedFilterResultConverter.ToApi(filteredUsers)
+            );
+        }
+
+        /// <summary>
+        /// Изменить данные пользователя по ID.
+        /// </summary>
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(UserDtoOut), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Edit(int id, UserDtoIn userDtoIn)
         {
             var existedUser = await _siteRepository.GetUserByIdAsync(id);
 
             if (existedUser == null)
             {
-                return NotFound();
+                return NotFound(
+                    string.Format(ConstantMessages.UserNotFoundById, id)
+                );
+            }
+
+            if (userDtoIn.Login == null || userDtoIn.Login.Length < 3 || userDtoIn.Login.Length > 32)
+            {
+                return BadRequest(ConstantMessages.UserInvalidLoginLength);
+            }
+            if (!Regex.IsMatch(userDtoIn.Login, @"^([0-9a-zA-Z]{3,32}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31})$"))
+            {
+                return BadRequest(ConstantMessages.UserInvalidLogin);
+            }
+            if (userDtoIn.Password == null || userDtoIn.Password.Length < 8 || userDtoIn.Password.Length > 64)
+            {
+                return BadRequest(ConstantMessages.UserInvalidPasswordLength);
+            }
+            if (!Regex.IsMatch(userDtoIn.Password, @"^[0-9a-zA-Z!@#№$%^&?*()\-=\[\]{}~`]{8,64}$"))
+            {
+                return BadRequest(ConstantMessages.UserInvalidPassword);
+            }
+
+            var existedUserWithLogin = await _siteRepository.GetUserByLoginAsync(userDtoIn.Login);
+
+            if (existedUserWithLogin != null && existedUser.Id != existedUserWithLogin.Id)
+            {
+                return BadRequest(ConstantMessages.UserAlreadyExistedWithLogin);
             }
 
             var userDtoOut = UserDtoInConverter.ToDtoOut(
@@ -78,17 +208,26 @@ namespace Site.Controllers
 
             var updatedUserDtoOut = await _siteRepository.UpdateUserAsync(userDtoOut);
 
-            return Ok(updatedUserDtoOut);
+            return Ok(
+                UserDtoOutConverter.ToApi(updatedUserDtoOut)
+            );
         }
 
+        /// <summary>
+        /// Удалить пользователя по ID.
+        /// </summary>
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(UserDtoOut), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
             var existedUser = await _siteRepository.GetUserByIdAsync(id);
 
             if (existedUser == null)
             {
-                return NotFound();
+                return NotFound(
+                    string.Format(ConstantMessages.UserNotFoundById, id)
+                );
             }
 
             await _siteRepository.DeleteUserAsync(id);

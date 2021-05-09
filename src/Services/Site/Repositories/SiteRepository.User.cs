@@ -59,14 +59,16 @@ namespace CountyRP.Services.Site.Repositories
             var usersQuery = _siteDbContext
                 .Users
                 .Where(
-                    users =>
-                        filter.Login != null && users.Login.Contains(filter.Login) &&
-                        filter.GroupIds != null && filter.GroupIds.Contains(users.GroupId)
+                    user =>
+                        (filter.Login == null || user.Login.Contains(filter.Login)) &&
+                        (filter.GroupIds == null || filter.GroupIds.Contains(user.GroupId))
                 )
                 .AsQueryable();
 
             var allCount = await usersQuery.CountAsync();
-            var maxPages = allCount / filter.Count;
+            var maxPages = (allCount %  filter.Count == 0)
+                ? allCount / filter.Count
+                : allCount / filter.Count + 1;
 
             var filteredUsersDao = await usersQuery
                 .Skip(filter.Count * (filter.Page - 1))
@@ -75,17 +77,32 @@ namespace CountyRP.Services.Site.Repositories
 
             return new PagedFilterResult<UserDtoOut>(
                 allCount: allCount,
+                page: filter.Page,
                 maxPages: maxPages,
                 items: filteredUsersDao
                     .Select(UserDaoConverter.ToRepository)
             );
         }
 
+        public async Task<UserDtoOut> Authenticate(string login, string password)
+        {
+            var userDao = await _siteDbContext
+                .Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
+                    user => user.Login == login && user.Password == password
+                );
+
+            return (userDao != null)
+                ? UserDaoConverter.ToRepository(userDao)
+                : null;
+        }
+
         public async Task DeleteUserAsync(int id)
         {
             var user = await _siteDbContext
                 .Users
-                .FindAsync(id);
+                .FirstAsync(user => user.Id == id);
 
             _siteDbContext.Users.Remove(user);
             await _siteDbContext.SaveChangesAsync();

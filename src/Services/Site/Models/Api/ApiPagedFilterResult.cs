@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace CountyRP.Services.Site.Models
+namespace CountyRP.Services.Site.Models.Api
 {
-    public class PagedFilterResult<T>
+    public class ApiPagedFilterResult<T>
     {
         public int AllCount { get; }
 
@@ -12,7 +12,7 @@ namespace CountyRP.Services.Site.Models
 
         public IEnumerable<T> Items { get; }
 
-        public PagedFilterResult(
+        public ApiPagedFilterResult(
             int allCount,
             int page,
             int maxPages,
