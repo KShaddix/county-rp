@@ -7,13 +7,17 @@ namespace CountyRP.Services.Forum.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; }
-        public string Caption { get; }
-        public int ForumId { get; }
+        public int Id { get; set; }
 
-        public TopicDao(int id,
+        public string Caption { get; set; }
+
+        public int ForumId { get; set; }
+
+        public TopicDao(
+            int id,
             string caption,
-            int forumId)
+            int forumId
+        )
         {
             Id = id;
             Caption = caption;

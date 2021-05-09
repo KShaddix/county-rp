@@ -1,5 +1,6 @@
 ﻿using CountyRP.Services.Forum.Entities;
 using CountyRP.Services.Forum.Models;
+using CountyRP.Services.Forum.Models.Api;
 
 namespace CountyRP.Services.Forum.Converters
 {
@@ -10,6 +11,19 @@ namespace CountyRP.Services.Forum.Converters
         )
         {
             return new UserDao(
+                id: source.Id,
+                login: source.Login,
+                groupId: source.GroupId,
+                reputation: source.Reputation,
+                posts: source.Posts,
+                warnings: source.Warnings
+            );
+        }
+        public static ApiUserDtoOut ToApi(
+            UserDtoOut source
+        )
+        {
+            return new ApiUserDtoOut(
                 id: source.Id,
                 login: source.Login,
                 groupId: source.GroupId,

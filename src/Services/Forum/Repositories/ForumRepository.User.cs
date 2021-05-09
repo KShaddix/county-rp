@@ -42,7 +42,7 @@ namespace CountyRP.Services.Forum.Repositories
                 : null;
         }
 
-        public async Task<UserDtoOut> UpdateUserAsync(UserDtoOut userDtoOut)
+        public async Task<UserDtoOut> UpdateUserAsync(int id, UserDtoOut userDtoOut)
         {
             var userDao = UserDtoOutConverter.ToDb(userDtoOut);
 
@@ -59,14 +59,16 @@ namespace CountyRP.Services.Forum.Repositories
             var usersQuery = _forumDbContext
                 .Users
                 .Where(
-                    users =>
-                        filter.Login != null && users.Login.Contains(filter.Login) &&
-                        filter.GroupId != null && filter.GroupId.Contains(users.GroupId)
+                    user =>
+                        (filter.Login == null || user.Login.Contains(filter.Login)) &&
+                        (filter.GroupIds == null || filter.GroupIds.Contains(user.GroupId))
                 )
                 .AsQueryable();
 
             var allCount = await usersQuery.CountAsync();
-            var maxPages = allCount / filter.Count;
+            var maxPages = (allCount % filter.Count == 0)
+                ? allCount / filter.Count
+                : allCount / filter.Count + 1;
 
             var filteredUsersDao = await usersQuery
                 .Skip(filter.Count * (filter.Page - 1))
@@ -75,6 +77,7 @@ namespace CountyRP.Services.Forum.Repositories
 
             return new PagedFilterResult<UserDtoOut>(
                 allCount: allCount,
+                page: filter.Page,
                 maxPages: maxPages,
                 items: filteredUsersDao
                     .Select(UserDaoConverter.ToRepository)
@@ -85,7 +88,7 @@ namespace CountyRP.Services.Forum.Repositories
         {
             var user = await _forumDbContext
                 .Users
-                .FindAsync(id);
+                .FirstAsync(user => user.Id == id);
 
             _forumDbContext.Users.Remove(user);
             await _forumDbContext.SaveChangesAsync();

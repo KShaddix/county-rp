@@ -3,9 +3,13 @@
     public class UserDtoIn
     {
         public string Login { get; }
+
         public string GroupId { get; }
+
         public int Reputation { get; }
+
         public int Posts { get; }
+
         public int Warnings { get; }
 
         public UserDtoIn(
@@ -13,7 +17,8 @@
             string groupId,
             int reputation,
             int posts,
-            int warnings)
+            int warnings
+        )
         {
             Login = login;
             GroupId = groupId;

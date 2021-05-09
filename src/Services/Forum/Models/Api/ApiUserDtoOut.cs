@@ -1,6 +1,6 @@
-﻿namespace CountyRP.Services.Forum.Models
+﻿namespace CountyRP.Services.Forum.Models.Api
 {
-    public class UserDtoOut
+    public class ApiUserDtoOut
     {
         public int Id { get; }
 
@@ -14,7 +14,7 @@
 
         public int Warnings { get; }
 
-        public UserDtoOut(
+        public ApiUserDtoOut(
             int id,
             string login,
             string groupId,

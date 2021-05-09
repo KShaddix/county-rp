@@ -1,22 +1,26 @@
-﻿namespace CountyRP.Services.Forum.Models
+﻿using System.Collections.Generic;
+
+namespace CountyRP.Services.Forum.Models
 {
     public class UserFilterDtoIn : PagedFilter
     {
         public string Login { get; }
-        public string GroupId { get; }
+
         public string SortingFlag{ get; }
+
+        public IEnumerable<string> GroupIds { get; }
 
         public UserFilterDtoIn(
             int count,
             int page,
             string login,
-            string groupId,
-            string sortingFlag
-            )
+            string sortingFlag,
+            IEnumerable<string> groupIds
+        )
             : base (count, page)
         {
             Login = login;
-            GroupId = groupId;
+            GroupIds = groupIds;
             SortingFlag = sortingFlag;
         }
     }

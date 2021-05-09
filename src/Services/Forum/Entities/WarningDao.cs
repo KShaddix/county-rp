@@ -8,23 +8,30 @@ namespace CountyRP.Services.Forum.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; }
-        public int UserId { get; }
-        public int AdminId { get; }
-        public DateTimeOffset DateTime { get; }
-        public DateTimeOffset FinishDateTime { get; }
-        public int Action { get; }
+        public int Id { get; set; }
+
+        public int UserId { get; set; }
+
+        public int AdminId { get; set; }
+
+        public DateTimeOffset DateTime { get; set; }
+
+        public DateTimeOffset FinishDateTime { get; set; }
+
+        public int Action { get; set; }
 
         [MaxLength(128)]
-        public string Text { get; }
+        public string Text { get; set; }
 
-        public WarningDao(int id,
+        public WarningDao(
+            int id,
             int userId,
             int adminId,
             DateTimeOffset dateTime,
             DateTimeOffset finishDateTime,
             int action,
-            string text)
+            string text
+        )
         {
             Id = id;
             UserId = userId;

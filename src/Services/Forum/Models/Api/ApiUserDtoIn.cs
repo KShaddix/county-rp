@@ -1,9 +1,7 @@
-﻿namespace CountyRP.Services.Forum.Models
+﻿namespace CountyRP.Services.Forum.Models.Api
 {
-    public class UserDtoOut
+    public class ApiUserDtoIn
     {
-        public int Id { get; }
-
         public string Login { get; }
 
         public string GroupId { get; }
@@ -14,8 +12,7 @@
 
         public int Warnings { get; }
 
-        public UserDtoOut(
-            int id,
+        public ApiUserDtoIn(
             string login,
             string groupId,
             int reputation,
@@ -23,7 +20,6 @@
             int warnings
         )
         {
-            Id = id;
             Login = login;
             GroupId = groupId;
             Reputation = reputation;

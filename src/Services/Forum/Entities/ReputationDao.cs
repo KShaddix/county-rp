@@ -8,21 +8,28 @@ namespace CountyRP.Services.Forum.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; }
-        public int UserId { get; }
-        public int ChangedByUserId { get; }
-        public DateTime DateTime { get; }
-        public int Action { get; }
+        public int Id { get; set; }
+
+        public int UserId { get; set; }
+
+        public int ChangedByUserId { get; set; }
+
+        public DateTimeOffset DateTime { get; set; }
+
+        public int Action { get; set; }
+
 
         [MaxLength(128)]
-        public string Text { get; }
+        public string Text { get; set; }
 
-        public ReputationDao(int id,
+        public ReputationDao(
+            int id,
             int userId,
             int changedByUserId,
-            DateTime dateTime,
+            DateTimeOffset dateTime,
             int action,
-            string text)
+            string text
+        )
         {
             Id = id;
             UserId = userId;

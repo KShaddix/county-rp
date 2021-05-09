@@ -1,4 +1,4 @@
-﻿using Forum.DbContexts;
+﻿using CountyRP.Services.Forum.DbContexts;
 
 namespace CountyRP.Services.Forum.Repositories
 {

@@ -8,21 +8,29 @@ namespace CountyRP.Services.Forum.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; }
-        public string Text { get; }
-        public int TopicId { get; }
-        public int UserId { get; }
-        public int LastEditorid { get; }
-        public DateTime CreationDateTime { get; }
-        public DateTime EditionDateTime { get; }
+        public int Id { get; set; }
 
-        public PostDao(int id,
+        public string Text { get; set; }
+
+        public int TopicId { get; set; }
+
+        public int UserId { get; set; }
+
+        public int LastEditorid { get; set; }
+
+        public DateTimeOffset CreationDateTime { get; set; }
+
+        public DateTimeOffset EditionDateTime { get; set; }
+
+        public PostDao(
+            int id,
             string text,
             int topicId,
             int userId,
             int lastEditorId,
-            DateTime creationDateTime,
-            DateTime editionDateTime)
+            DateTimeOffset creationDateTime,
+            DateTimeOffset editionDateTime
+        )
         {
             Id = id;
             Text = text;

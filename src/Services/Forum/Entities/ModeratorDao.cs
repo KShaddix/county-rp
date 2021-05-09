@@ -7,18 +7,29 @@ namespace CountyRP.Services.Forum.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; }
-        public int EntityId { get; }
-        public int EntityType { get; }
-        public int ForumId { get; }
-        public bool CreateTopics { get; }
-        public bool CreatePosts { get; }
-        public bool Read { get; }
-        public bool EditPosts { get; }
-        public bool DeleteTopics { get; }
-        public bool DeletePosts { get; }
+        public int Id { get; set; }
 
-        public ModeratorDao(int id,
+        public int EntityId { get; set; }
+
+        public int EntityType { get; set; }
+
+        public int ForumId { get; set; }
+
+        public bool CreateTopics { get; set; }
+
+        public bool CreatePosts { get; set; }
+
+        public bool Read { get; set; }
+
+        public bool EditPosts { get; set; }
+
+        public bool DeleteTopics { get; set; }
+
+        public bool DeletePosts { get; set; }
+
+
+        public ModeratorDao(
+            int id,
             int entityId,
             int entityType,
             int forumId,
@@ -27,7 +38,8 @@ namespace CountyRP.Services.Forum.Entities
             bool read,
             bool editPosts,
             bool deleteTopics,
-            bool deletePosts)
+            bool deletePosts
+        )
         {
             Id = id;
             EntityId = entityId;

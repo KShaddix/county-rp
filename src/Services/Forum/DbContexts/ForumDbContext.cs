@@ -1,7 +1,7 @@
 ﻿using CountyRP.Services.Forum.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.DbContexts
+namespace CountyRP.Services.Forum.DbContexts
 {
     public class ForumDbContext : DbContext
     {

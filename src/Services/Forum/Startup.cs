@@ -1,5 +1,5 @@
-using Forum.DbContexts;
-using Forum.Repositories;
+using CountyRP.Services.Forum.DbContexts;
+using CountyRP.Services.Forum.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

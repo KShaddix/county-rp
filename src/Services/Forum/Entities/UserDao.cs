@@ -7,25 +7,30 @@ namespace CountyRP.Services.Forum.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; }
+        public int Id { get; set; }
 
         [MinLength(3)]
         [MaxLength(32)]
-        public string Login { get; }
+        public string Login { get; set; }
 
         [MinLength(3)]
         [MaxLength(16)]
-        public string GroupId { get; }
-        public int Reputation { get; }
-        public int Posts { get; }
-        public int Warnings { get; }
+        public string GroupId { get; set; }
 
-        public UserDao(int id,
+        public int Reputation { get; set; }
+
+        public int Posts { get; set; }
+
+        public int Warnings { get; set; }
+
+        public UserDao(
+            int id,
             string login,
             string groupId,
             int reputation,
             int posts,
-            int warnings)
+            int warnings
+        )
         {
             Id = id;
             Login = login;
