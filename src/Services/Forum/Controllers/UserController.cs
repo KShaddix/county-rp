@@ -32,27 +32,29 @@ namespace CountyRP.Services.Forum.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(UserDtoOut), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] UserDtoIn userDtoIn)
+        public async Task<IActionResult> Create([FromBody] ApiUserDtoIn apiUserDtoIn)
         {
-            if (userDtoIn.Login == null || userDtoIn.Login.Length < 3 || userDtoIn.Login.Length > 32)
+            if (apiUserDtoIn.Login == null || apiUserDtoIn.Login.Length < 3 || apiUserDtoIn.Login.Length > 32)
             {
                 return BadRequest(ConstantMessages.UserInvalidLoginLength);
             }
-            if (!Regex.IsMatch(userDtoIn.Login, @"^([0-9a-zA-Z]{3,32}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31})$"))
+            if (!Regex.IsMatch(apiUserDtoIn.Login, @"^([0-9a-zA-Z]{3,32}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31})$"))
             {
                 return BadRequest(ConstantMessages.UserInvalidLogin);
             }
-            if (userDtoIn.GroupId == null || userDtoIn.GroupId.Length < 3 || userDtoIn.GroupId.Length > 16)
+            if (apiUserDtoIn.GroupId == null || apiUserDtoIn.GroupId.Length < 3 || apiUserDtoIn.GroupId.Length > 16)
             {
                 return BadRequest(ConstantMessages.UserInvalidGroupIdLength);
             }
 
-            var existedUser = await _forumRepository.GetUserByLoginAsync(userDtoIn.Login);
+            var existedUser = await _forumRepository.GetUserByLoginAsync(apiUserDtoIn.Login);
 
             if (existedUser != null)
             {
                 return BadRequest(ConstantMessages.UserAlreadyExistedWithLogin);
             }
+
+            var userDtoIn = ApiUserDtoInConverter.ToRepository(apiUserDtoIn);
 
             var userDtoOut = await _forumRepository.AddUserAsync(userDtoIn);
 
@@ -137,7 +139,7 @@ namespace CountyRP.Services.Forum.Controllers
         [ProducesResponseType(typeof(UserDtoOut), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Edit(int id, [FromBody] UserDtoIn userDtoIn)
+        public async Task<IActionResult> Edit(int id, [FromBody] ApiUserDtoIn apiUserDtoIn)
         {
             var existedUser = await _forumRepository.GetUserByIdAsync(id);
 
@@ -148,25 +150,27 @@ namespace CountyRP.Services.Forum.Controllers
                 );
             }
 
-            if (userDtoIn.Login == null || userDtoIn.Login.Length < 3 || userDtoIn.Login.Length > 32)
+            if (apiUserDtoIn.Login == null || apiUserDtoIn.Login.Length < 3 || apiUserDtoIn.Login.Length > 32)
             {
                 return BadRequest(ConstantMessages.UserInvalidLoginLength);
             }
-            if (!Regex.IsMatch(userDtoIn.Login, @"^([0-9a-zA-Z]{3,32}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31})$"))
+            if (!Regex.IsMatch(apiUserDtoIn.Login, @"^([0-9a-zA-Z]{3,32}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31}|[0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31} [0-9a-zA-Z]{1,31})$"))
             {
                 return BadRequest(ConstantMessages.UserInvalidLogin);
             }
-            if (userDtoIn.GroupId == null || userDtoIn.GroupId.Length < 3 || userDtoIn.GroupId.Length > 16)
+            if (apiUserDtoIn.GroupId == null || apiUserDtoIn.GroupId.Length < 3 || apiUserDtoIn.GroupId.Length > 16)
             {
                 return BadRequest(ConstantMessages.UserInvalidGroupIdLength);
             }
 
-            var existedUserWithLogin = await _forumRepository.GetUserByLoginAsync(userDtoIn.Login);
+            var existedUserWithLogin = await _forumRepository.GetUserByLoginAsync(apiUserDtoIn.Login);
 
             if (existedUserWithLogin != null && existedUser.Id != existedUserWithLogin.Id)
             {
                 return BadRequest(ConstantMessages.UserAlreadyExistedWithLogin);
             }
+
+            var userDtoIn = ApiUserDtoInConverter.ToRepository(apiUserDtoIn);
 
             var userDtoOut = UserDtoInConverter.ToDtoOut(
                 source: userDtoIn,

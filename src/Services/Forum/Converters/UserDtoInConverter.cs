@@ -1,5 +1,6 @@
 ﻿using CountyRP.Services.Forum.Entities;
 using CountyRP.Services.Forum.Models;
+using CountyRP.Services.Forum.Models.Api;
 
 namespace CountyRP.Services.Forum.Converters
 {
