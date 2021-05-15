@@ -17,5 +17,17 @@ namespace CountyRP.Services.Forum.Converters
                 items: source.Items.Select(UserDtoOutConverter.ToApi)
             );
         }
+
+        public static ApiPagedFilterResult<ApiTopicDtoOut> ToApi(
+            PagedFilterResult<TopicDtoOut> source
+        )
+        {
+            return new ApiPagedFilterResult<ApiTopicDtoOut>(
+                allCount: source.AllCount,
+                page: source.Page,
+                maxPages: source.MaxPages,
+                items: source.Items.Select(UserDtoOutConverter.ToApi)
+            );
+        }
     }
 }
