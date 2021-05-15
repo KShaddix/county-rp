@@ -3,7 +3,7 @@ using CountyRP.Services.Forum.Models;
 
 namespace CountyRP.Services.Forum.Converters
 {
-    public class TopicDaoConverter
+    internal class TopicDaoConverter
     {
         public static TopicDtoOut ToRepository(
             TopicDao source
