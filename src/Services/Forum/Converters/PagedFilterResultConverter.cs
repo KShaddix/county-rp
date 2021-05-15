@@ -18,6 +18,18 @@ namespace CountyRP.Services.Forum.Converters
             );
         }
 
+        public static ApiPagedFilterResult<ApiForumDtoOut> ToApi(
+            PagedFilterResult<ForumDtoOut> source
+        )
+        {
+            return new ApiPagedFilterResult<ApiForumDtoOut>(
+                allCount: source.AllCount,
+                page: source.Page,
+                maxPages: source.MaxPages,
+                items: source.Items.Select(ForumDtoOutConverter.ToApi)
+            );
+        }
+
         public static ApiPagedFilterResult<ApiTopicDtoOut> ToApi(
             PagedFilterResult<TopicDtoOut> source
         )
