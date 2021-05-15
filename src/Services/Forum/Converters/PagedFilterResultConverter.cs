@@ -18,7 +18,7 @@ namespace CountyRP.Services.Forum.Converters
             );
         }
 
-        public static ApiPagedFilterResult<ApiForumDtoOut> ForumToApi(
+        public static ApiPagedFilterResult<ApiForumDtoOut> ToApi(
             PagedFilterResult<ForumDtoOut> source
         )
         {

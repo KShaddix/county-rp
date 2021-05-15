@@ -2,21 +2,10 @@
 {
     public class ApiForumDtoIn
     {
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public int ParentId { get; }
+        public int ParentId { get; set; }
 
-        public int Order { get; }
-
-        public ApiForumDtoIn(
-            string name,
-            int parentId,
-            int order
-        )
-        {
-            Name = name;
-            ParentId = parentId;
-            Order = order;
-        }
+        public int Order { get; set; }
     }
 }

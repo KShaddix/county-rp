@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CountyRP.Services.Forum.Controllers
@@ -59,20 +60,9 @@ namespace CountyRP.Services.Forum.Controllers
         {
             var forumsDtoOut = await _forumRepository.GetForumsAsync();
 
-            if (forumsDtoOut == null)
-            {
-                return NotFound(ConstantMessages.ForumsNotFound);
-            }
-
-            var apiForumsDtoOut = new List<ApiForumDtoOut>();
-            foreach (var forum in forumsDtoOut)
-            {
-                apiForumsDtoOut.Add(
-                    ForumDtoOutConverter.ToApi(forum)
-                );
-            }
-
-            return Ok(apiForumsDtoOut);
+            return Ok(
+                forumsDtoOut.Select(ForumDtoOutConverter.ToApi)
+            );
         }
 
         /// <summary>
@@ -119,7 +109,7 @@ namespace CountyRP.Services.Forum.Controllers
             var filteredForums = await _forumRepository.GetForumsByFilterAsync(filterDtoIn);
 
             return Ok(
-                PagedFilterResultConverter.ForumToApi(filteredForums)
+                PagedFilterResultConverter.ToApi(filteredForums)
             );
         }
 

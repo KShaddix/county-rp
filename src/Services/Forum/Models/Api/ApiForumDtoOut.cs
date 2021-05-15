@@ -2,25 +2,12 @@
 {
     public class ApiForumDtoOut
     {
-        public int Id { get; }
+        public int Id { get; set; }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public int ParentId { get; }
+        public int ParentId { get; set; }
 
-        public int Order { get; }
-
-        public ApiForumDtoOut(
-            int id,
-            string name,
-            int parentId,
-            int order
-        )
-        {
-            Id = id;
-            Name = name;
-            ParentId = parentId;
-            Order = order;
-        }
+        public int Order { get; set; }
     }
 }

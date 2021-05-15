@@ -20,8 +20,6 @@
 
         public static string ForumInvalidNameLength = "Длина названия форума должна быть от 1 до 96 символов";
 
-        public static string ForumsNotFound = "Форумов не обнаружено";
-
         public static string ForumNotFoundById = "Форум с ID {0} не найден";
     }
 }

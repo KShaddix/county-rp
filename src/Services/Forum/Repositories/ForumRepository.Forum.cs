@@ -26,14 +26,7 @@ namespace CountyRP.Services.Forum.Repositories
                 .AsNoTracking()
                 .ToArrayAsync();
 
-            var forumsDto = new List<ForumDtoOut>();
-
-            foreach (var forum in forumsDao)
-            {
-                forumsDto.Add(ForumDaoConverter.ToRepository(forum));
-            }
-
-            return forumsDto ?? null;
+            return forumsDao.Select(ForumDaoConverter.ToRepository);
         }
 
         public async Task<ForumDtoOut> GetForumByIdAsync(int id)
@@ -48,37 +41,37 @@ namespace CountyRP.Services.Forum.Repositories
                 : null;
         }
 
-        public async Task<PagedFilterResult<ForumDtoOut>> GetForumsByFilterAsync(ForumFilterDtoIn filter)
+        public async Task<PagedFilterResult<ForumDtoOut>> GetForumsByFilterAsync(ForumFilterDtoIn filterDtoIn)
         {
             var forumsQuery = _forumDbContext
                 .Forums
                 .Where(
-                    forum => forum.ParentId.Equals(filter.ParentId)
+                    forum => forum.ParentId.Equals(filterDtoIn.ParentId)
                 )
                 .AsQueryable();
 
             var allCount = await forumsQuery.CountAsync();
-            var maxPages = (allCount % filter.Count == 0)
-                ? allCount / filter.Count
-                : allCount / filter.Count + 1;
+            var maxPages = (allCount % filterDtoIn.Count == 0)
+                ? allCount / filterDtoIn.Count
+                : allCount / filterDtoIn.Count + 1;
 
             var filteredForumsDao = await forumsQuery
-                .Skip(filter.Count * (filter.Page - 1))
-                .Take(filter.Count)
+                .Skip(filterDtoIn.Count * (filterDtoIn.Page - 1))
+                .Take(filterDtoIn.Count)
                 .ToListAsync();
 
             return new PagedFilterResult<ForumDtoOut>(
                 allCount: allCount,
-                page: filter.Page,
+                page: filterDtoIn.Page,
                 maxPages: maxPages,
                 items: filteredForumsDao
                     .Select(ForumDaoConverter.ToRepository)
             );
         }
 
-        public async Task<ForumDtoOut> UpdateForumAsync(ForumDtoOut forum)
+        public async Task<ForumDtoOut> UpdateForumAsync(ForumDtoOut forumDtoOut)
         {
-            var forumDao = ForumDtoOutConverter.ToDb(forum);
+            var forumDao = ForumDtoOutConverter.ToDb(forumDtoOut);
 
             var updatedForumDao = _forumDbContext.Forums.Update(forumDao)?.Entity;
             await _forumDbContext.SaveChangesAsync();
