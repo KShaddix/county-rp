@@ -1,5 +1,4 @@
-﻿using CountyRP.Services.Site;
-using CountyRP.Services.Site.Converters;
+﻿using CountyRP.Services.Site.Converters;
 using CountyRP.Services.Site.Models.Api;
 using CountyRP.Services.Site.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +8,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Site.Controllers
+namespace CountyRP.Services.Site.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -121,7 +120,7 @@ namespace Site.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Authenticate(string login, string password)
         {
-            var userDtoOut = await _siteRepository.Authenticate(login, password);
+            var userDtoOut = await _siteRepository.AuthenticateAsync(login, password);
 
             if (userDtoOut == null)
             {
@@ -140,6 +139,7 @@ namespace Site.Controllers
         /// </summary>
         [HttpGet("FilterBy")]
         [ProducesResponseType(typeof(ApiPagedFilterResult<ApiUserDtoOut>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> FilterBy([FromQuery] ApiUserFilterDtoIn filter)
         {
             if (filter.Count < 1 || filter.Count > 100)

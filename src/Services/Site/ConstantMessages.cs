@@ -22,7 +22,7 @@
 
         public static string UserInvalidPasswordLength = "Длина пароля должна быть от 8 до 64 символов";
 
-        public static string UserInvalidPassword = "Пароль должен содержать символы латинского алфавита и специальные символы";
+        public static string UserInvalidPassword = "Пароль должен состоять из символов латинского алфавита и специальных символов";
 
         public static string UserAlreadyExistedWithLogin = "Пользователь с таким логином уже существует";
 
@@ -51,6 +51,8 @@
         // Баны
 
         public static string BanNotFoundById = "Бан с ID {0} не найден";
+
+        public static string BanNotFoundByUserId = "Бан с ID забаненного пользователя {0} не найден";
 
         public static string BanInvalidReasonLength = "Длина причина бана должна быть от 1 до 256 символов";
 
