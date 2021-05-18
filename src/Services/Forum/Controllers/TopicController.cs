@@ -5,9 +5,6 @@ using CountyRP.Services.Forum.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CountyRP.Services.Forum.Controllers
@@ -78,7 +75,7 @@ namespace CountyRP.Services.Forum.Controllers
         /// </summary>
         [HttpGet("FilterBy")]
         [ProducesResponseType(typeof(PagedFilterResult<ApiTopicDtoOut>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Filterby([FromQuery] ApiTopicFilterDtoIn filter)
+        public async Task<IActionResult> FilterBy([FromQuery] ApiTopicFilterDtoIn filter)
         {
             if (filter.Count < 1 || filter.Count > 100)
             {
