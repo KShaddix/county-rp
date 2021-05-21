@@ -26,7 +26,7 @@ namespace CountyRP.Services.Forum.Controllers
         }
 
         /// <summary>
-        /// Создать изменение репутации
+        /// Создать предупреждение
         /// </summary>
         [HttpPost]
         [ProducesResponseType(typeof(ApiWarningDtoOut), StatusCodes.Status201Created)]
@@ -49,7 +49,7 @@ namespace CountyRP.Services.Forum.Controllers
         }
 
         /// <summary>
-        /// Получить отфильтрованный список изменений репутации
+        /// Получить отфильтрованный список предупреждений
         /// </summary>
         [HttpGet("FilterBy")]
         [ProducesResponseType(typeof(PagedFilterResult<ApiWarningDtoOut>), StatusCodes.Status200OK)]
@@ -75,7 +75,7 @@ namespace CountyRP.Services.Forum.Controllers
         }
 
         /// <summary>
-        /// Удалить изменение репутации по ID
+        /// Удалить предупреждение по ID
         /// </summary>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -88,7 +88,7 @@ namespace CountyRP.Services.Forum.Controllers
         }
 
         /// <summary>
-        /// Удалить все изменений репутаций у игрока под ID userId
+        /// Удалить все предупреждения у игрока под ID userId
         /// </summary>
         [HttpDelete("ByUserId/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
