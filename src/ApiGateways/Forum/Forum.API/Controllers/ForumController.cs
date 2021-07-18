@@ -1,4 +1,5 @@
-﻿using CountyRP.ApiGateways.Forum.API.Models;
+﻿using CountyRP.ApiGateways.Forum.API.Converters;
+using CountyRP.ApiGateways.Forum.API.Models;
 using CountyRP.ApiGateways.Forum.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,8 +21,9 @@ namespace CountyRP.ApiGateways.Forum.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ApiForumDtoIn apiForumDtoIn)
         {
-            var response = await _forumService.Create(
-                new Infrastructure.Models.ForumDtoIn(apiForumDtoIn.Name, apiForumDtoIn.ParentId, apiForumDtoIn.Order));
+            var forumDtoIn = ApiForumDtoInConverter.ToService(apiForumDtoIn);
+
+            var response = await _forumService.Create(forumDtoIn);
 
             return Created(
                 string.Empty,

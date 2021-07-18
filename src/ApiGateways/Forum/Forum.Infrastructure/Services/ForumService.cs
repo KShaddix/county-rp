@@ -1,4 +1,5 @@
-﻿using CountyRP.ApiGateways.Forum.Infrastructure.Models;
+﻿using CountyRP.ApiGateways.Forum.Infrastructure.Converters;
+using CountyRP.ApiGateways.Forum.Infrastructure.Models;
 using CountyRP.ApiGateways.Forum.Infrastructure.Services.Interfaces;
 using CountyRP.Gateways.Forum.Infrastructure.RestClients.ServiceForum;
 using System.Threading.Tasks;
@@ -16,8 +17,9 @@ namespace CountyRP.ApiGateways.Forum.Infrastructure.Services
 
         public async Task<ForumDtoOut> Create(ForumDtoIn forumDtoIn)
         {
-            var response = await _forumClient.CreateAsync(
-                new ApiForumDtoIn { Name = forumDtoIn.Name, Order = forumDtoIn.Order, ParentId = forumDtoIn.ParentId });
+            var apiForumDtoIn = ForumDtoInConverter.ToExternalService(forumDtoIn);
+
+            var response = await _forumClient.CreateAsync(apiForumDtoIn);
 
             return new ForumDtoOut(
                 response.Id, response.Name, response.ParentId, response.Order);
